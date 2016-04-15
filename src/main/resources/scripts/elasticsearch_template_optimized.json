@@ -1,0 +1,127 @@
+
+{
+  "order": 1,
+  "template": "prefixofyourindex*",
+  "settings": {
+    "index": {
+      "refresh_interval": "60s",
+      "number_of_shards": 10,
+      "number_of_replicas": 1,
+      "merge": {
+        "policy": {
+          "max_merged_segment": "1gb"
+        }
+      }
+    },
+    "analysis": {
+      "filter": {
+        "custom_whitespace_filter": {
+          "split_on_numerics": "false",
+          "type": "word_delimiter",
+          "generate_word_parts": "true",
+          "preserve_original": "false",
+          "catenate_words": "true",
+          "catenate_numbers": "true",
+          "generate_number_parts": "false",
+          "all_parts_at_same_position": "false"
+        }
+      },
+      "analyzer": {
+        "multi_string_data": {
+          "filter": [
+            "lowercase",
+            "custom_whitespace_filter"
+          ],
+          "type": "custom",
+          "tokenizer": "whitespace"
+        },
+        "single_string_data": {
+          "filter": [
+            "lowercase"
+          ],
+          "type": "custom",
+          "tokenizer": "keyword"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "_default_": {
+      "_all": {
+        "enabled": false
+      },
+      "dynamic_templates": [
+        {
+          "single_string_fields": {
+            "mapping": {
+              "analyzer": "single_string_data",
+              "norms": {
+                "enabled": false
+              },
+              "fielddata": {
+                "format": "disabled"
+              },
+              "index": "analyzed",
+              "type": "string"
+            },
+            "match_mapping_type": "string",
+            "match": "*"
+          }
+        },
+        {
+          "double_fields": {
+            "mapping": {
+              "type": "double",
+              "doc_values": true
+            },
+            "match_mapping_type": "double",
+            "match": "*"
+          }
+        },
+        {
+          "long_fields": {
+            "mapping": {
+              "type": "double",
+              "doc_values": true
+            },
+            "match_mapping_type": "long",
+            "match": "*"
+          }
+        },
+        {
+          "bool_fields": {
+            "mapping": {
+              "type": "boolean",
+              "doc_values": true
+            },
+            "match_mapping_type": "boolean",
+            "match": "*"
+          }
+        },
+        {
+          "other_fields": {
+            "mapping": {
+              "doc_values": false
+            },
+            "match_mapping_type": "*",
+            "match": "*"
+          }
+        }
+      ],
+      "properties": {
+        "payload": {
+          "analyzer": "multi_string_data",
+          "norms": {
+            "enabled": false
+          },
+          "fielddata": {
+            "format": "disabled"
+          },
+          "index": "analyzed",
+          "type": "string"
+        }
+      }
+   }
+  },
+  "aliases": {}
+}
