@@ -1,0 +1,57 @@
+{
+  "loadconfig": {
+     "experiment": {
+      "name": "Log_ES_6",
+      "Description": "ES",
+      "run_for_seconds": 600
+    },
+    "elasticsearch": {
+      "cluster.name": "elasticsearch_change_name",
+      "cluster_host_ips": [
+        "0.0.0.0","1.1.1.1"
+      ],
+      "portnumber": 9200,
+      "indexName": "index_name_change_me",
+      "typeNameOfIndex": "type_index_name_change_me"
+    },
+    "load_infrastructure": {
+      "threads": 10,
+      "throttle_in_ms": 1000,
+      "loglevel":"info"
+    },
+    "use_templates": [
+      ""
+    ],
+    "querytemplate": {
+      "initialquery": {
+        "size": 200
+      },
+      "text_search_only": {
+        "textfields_initialquery": {
+          "payload":{
+            "match":"##datalogvalue1##"
+          },
+          "txnId":{
+            "match":"##txnId##"
+          }
+      },
+        "template": {
+          
+          "query": {
+            "bool": {
+              "must": [
+                                
+                { "match": { "payload": "##datalogvalue1##" }}
+              ]
+            }
+          } 
+
+        }
+      },
+      "aggregator_query":{
+        
+      }
+      
+    }
+  }
+}
